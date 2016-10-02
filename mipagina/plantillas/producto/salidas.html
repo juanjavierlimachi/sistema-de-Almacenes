@@ -1,0 +1,40 @@
+<div class="card">
+<form method="GET" id="Tra">{% csrf_token %}>
+	<input type="text" placeholder="Nombre, Apellidos, CI/NIT" class="form-control" id="ShearTra" name="ShearTra" required autocomplete="off" title="Buscar Trabajador"/>
+        <button class="btn btn-default">Buscar</button>
+    </form>
+   <p id="resp"></p>
+</div>
+<script type="text/javascript">
+$(document).ready(function(){
+$("#Tra").submit(function(e){
+		e.preventDefault();
+		var datos={
+			'trabajador':$("#ShearTra").val(),
+			'producto':"{{id_pro}}"
+		}
+		console.log(datos);
+		$.ajax({
+			type:'GET',
+			url:'/BuscarTrab/',
+			data: datos,
+			success: function(data){
+				console.log(data);
+				$('#resp').html(data);
+			}	
+		});
+	});
+	//alert("jajaja");
+});
+$('#resp li a').on('click', function(e){
+	e.preventDefault();
+		var urla=$('#resp li a').attr('href'); 
+		//alert(urla);
+		return false;
+	});
+/*function Recuperar(e){
+		e.preventDefault();
+		var urla=$(this).attr('href'); 
+		alert(urla);
+	}*/
+</script>

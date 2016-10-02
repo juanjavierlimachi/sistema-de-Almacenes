@@ -1,0 +1,32 @@
+<table class="table table-hover">
+	<tr><td colspan="7" align="center">LISTA DE INGRESOS DE PRODUCTOS</td></tr>
+<tr class="success"><td>Producto</td><td>Cantidad</td><td>Precio</td><td>total</td><td>Proveedor</td><td>Fecha de Registro</td><td>Opciones</td></tr>
+{% for i in ingresos %}
+	{% if i.estado == 0 %}
+<tr>
+	<td>{{i.producto}}</td>
+	<td>{{i.cantidad}}</td>
+	<td>{{i.Precio_unidad}}</td>
+	<td>{{i.total}}</td>
+	<td>{{i.proveedor}}</td>
+	<td>{{i.fecha_registro}}</td>
+	<td>
+		{% if user.is_active %}
+		<a href="/editIngresos/{{i.id}}/"><span class="glyphicon glyphicon-pencil"></span></a>
+		<a href="/deleteIngresos/{{i.id}}/"><span class="glyphicon glyphicon-trash"></span></a>
+		{% else %}
+			<span class="glyphicon glyphicon-info-sign"></span>
+		{% endif %}
+	</td>
+</tr>
+	{% endif %}
+{% endfor %}
+<tr> <td>Registros:{{t_ingresos}}</td></tr>
+</table>
+
+
+<ul class="pager">
+  <li><a href="#"> &larr;Anterior</a></li>
+  <li><a href="#">Siguiente &rarr;</a></li>
+</ul>
+<script type="text/javascript" src="{{STATIC_URL}}js/modales.js"></script>

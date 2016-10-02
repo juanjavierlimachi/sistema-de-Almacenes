@@ -1,0 +1,48 @@
+<style type="text/css">
+table tr{
+	height:25px;
+	vertical-align: top;
+	border-collapse: collapse;
+}
+table{text-align: center; font-size: 14px;}
+</style>
+<table border=1 class="table table-hover">
+	<tr class="success"><td><img id ="ar" src="http://localhost:8000{{STATIC_URL}}img/FCA_logo.jpg"></td><td align="center" colspan="7"> Kardex Producto:   {{producto.Nombre_producto}}</td><td>
+		<img id ="ar" src="http://localhost:8000{{MEDIA_URL}}{{producto.archivo}}"> </td></tr>
+	<tr class="success">
+		<td colspan="2"><br>Marca: {{producto.Marca}}</td>
+		<td colspan="2"><br>Precio unitario: {{producto.Precio_producto}}</td>
+		<td><br>Stock: {{producto.Stock}}</td>
+		<td colspan="4"><br>Registrado Por: {{producto.Usuario|upper}}</td>
+	</tr>
+
+	<tr class="success">
+		<td colspan="3"><br>Categoria: {{producto.Categoria}}</td>
+		<td colspan="4"><br>Fecha de Registro: {{producto.fecha_registro}}</td>
+		<td colspan="2"><br>Estado:  {% if producto.estado == 0 %}
+				<img src="http://localhost:8000{{STATIC_URL}}img/icon_success.gif" title="Activo">
+			{% else %}
+				<img src="http://localhost:8000{{STATIC_URL}}img/icon_error.gif" title="Inactivo">
+			{% endif %}</td>
+	</tr>
+
+		<tr>
+			<td colspan="9"><br>Total Salidas del Prducto:{{salidas}}  Bs:</td>
+		</tr>
+		<tr>
+			<td colspan="9"><br>Total Ingresos del Producto:{{ingresos}} Bs</td>
+		</tr>
+
+	<tr class="success">
+		<td colspan="4"><br>Ultima fecha de Salida: {% for i in salidas_ul %}
+				{{i.fecha_registro}}
+			{% empty %}
+			El producto no tiene salida
+			{% endfor %}
+		<td colspan="5"><br>Ultima fecha de Ingreso: {% for i in ingresos_ul %}
+				{{i.fecha_registro}}
+			{% empty %}
+			El prodcuto no tiene Ingreso
+			{% endfor %}</td>
+	</tr>
+</table>

@@ -1,0 +1,42 @@
+
+<div class="card">
+<form method="GET" id="Tra">{% csrf_token %}>
+	<input type="text" placeholder="Nombre o Razon sacial, Nit, Telf" class="form-control" id="ShearTra" name="ShearTra" required autocomplete="off" title="Buscar un Proveedor"/>
+        <button class="btn btn-default">Buscar</button>
+    </form>
+   <p id="resp"></p>
+</div>
+<script type="text/javascript">
+$(document).ready(function(){
+$("#Tra").submit(function(e){
+		e.preventDefault();
+		var datos={
+			'trabajador':$("#ShearTra").val(),
+			'producto':"{{id_pro}}"
+		}
+		console.log(datos);
+		$.ajax({
+			type:'GET',
+			url:'/BuscarProveedor/',
+			data: datos,
+			success: function(data){
+				console.log(data);
+				/*var html=""
+				for(var i = 0; i<data.length; i++){
+					html += "<li>"+data[i].pk+':'+data[i].fields.Nombre_trabajador+','+data[i].fields.Apellidos+
+					''+data[i].fields.Ci_Nit+''+data[i].fields.Direccion+
+					"<a href='"+data[i].pk+"' onclick='Recuperar()' id='hh'>+</a></li>"
+				}*/
+				$('#resp').html(data);
+			}	
+		});
+	});
+	//alert("jajaja");
+});
+$('#resp li a').on('click', function(e){
+	e.preventDefault();
+		var urla=$('#resp li a').attr('href'); 
+		//alert(urla);
+		return false;
+	});
+</script>

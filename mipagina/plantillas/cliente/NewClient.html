@@ -1,0 +1,36 @@
+<script type="text/javascript">
+$('#Tipo').submit(function(e){
+		e.preventDefault();
+		var dato=$(this).serialize();
+		console.log(dato);
+		$.ajax({
+			type:'POST',
+			url:'/NewClient/',
+			data: dato,
+			success:function(resp){
+				alert("Datos Registrados Correctamente.");
+				
+				if(resp=='ok'){
+					$.ajax({
+				      type:'GET',
+				      url:'/VerClientes/',
+				      beforeSend:Espera,
+				      success:function(resp){
+				        $("#FormAjax").html(resp);
+				      }
+				    });
+				    function Espera(){
+				       $("#FormAjax").text("Procesando");
+				    }
+				}else{alert("Datos Incorrectos !!")}
+			}
+		});
+	});
+</script>
+<div class="card">
+	<p id="texto">Registro Trabajador</p>
+<form method="POST" id="Tipo">{% csrf_token %}
+	{{forms}}<br>
+	<button class="btn btn-primary">Registrar</button>
+</form>
+</div>

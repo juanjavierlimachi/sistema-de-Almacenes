@@ -1,0 +1,107 @@
+<script type="text/javascript">
+$('#categorias table tr td #salida').on('click', function(){
+        if( $(this).is(':checked') ){
+            var idProduco=$(this).val();
+        $.ajax({
+            type:'GET',
+            url:'/salidas/'+idProduco,
+            success:function(resp){
+                $("#ventanas").dialog({
+                    modal:true,
+                    show:"blind",
+                    width: 600,
+                    hide:"explode",
+                    title:"Codigo Articulo:"+idProduco,
+                    position: "center"
+                }); 
+                $('#ventanas').html(resp);
+            }
+        });
+       } else{
+            var idProduco=$(this).val();
+            alert("Actualizar la Salida :"+idProduco);
+       }
+    });
+    $('#categorias table tr td #valor').on( 'click', function() {
+    if( $(this).is(':checked') ){
+        var idProduco=$(this).val();
+        $.ajax({
+            type:'GET',
+            url:'/IngresosP/'+idProduco,
+            success:function(resp){
+                $("#ventanas").dialog({
+                    modal:true,
+                    show:"blind",
+                    width: 600,
+                    hide:"explode",
+                    title:"Codigo Articulo:"+idProduco,
+                    position: "center"
+                }); 
+                $('#ventanas').html(resp);
+            }
+        });
+    } else {
+         // Hacer algo si el checkbox ha sido deseleccionado
+        alert("El checkbox con valor " + $(this).val() + " ha sido deseleccionado");
+    }
+
+});
+    
+</script>
+<div id="categorias">
+   <table class="table table-hover">
+  <tr><td colspan="11" align="center">LISTA DE ARTÍCULOS E INSUMOS</td></tr>
+  <tr class="success">
+    <td>Cod</td>
+    <td>Nombre Articulo</td>
+    <td>Marca</td>
+    <td>Procio Unitario</td>
+    <td>Usuario</td>
+    <td>Categoria</td>
+
+    <td>Kardex</td>
+    <td>Ingreso</td>
+    <td>Salida</td>
+    <td></td>
+  </tr>
+  {% for i in datos %}
+    {% if i.estado == 0 %}
+        <tr>
+        <td><a href="/ok/" id="{{i.id}}">{{i.id}}</a></td>
+            <td>{{i.Nombre_producto|upper}}</td>
+            <td>{{i.Marca}}</td>
+            <td>{{i.Precio_producto}}</td>
+            <td>{{i.Usuario}}</td>
+            <td>{{i.Categoria}}</td>
+            <td>{% if i.Stock < 10 %}
+                      <p style="background:LightCoral;margin-top: 0px;margin-bottom: 0px;">{{i.Stock}}</p>
+                  {% endif %}
+                  {% if i.Stock >= 10 and i.Stock < 25 %}
+                      <p style="background:Khaki;margin-top: 0px;margin-bottom: 0px;">{{i.Stock}}</p>    
+                  {% endif %}
+                  {% if i.Stock >= 25 %}
+                      <p style="background:SpringGreen;margin-top: 0px;margin-bottom: 0px;">{{i.Stock}}</p>    
+                  {% endif %}
+              </td>
+            <td>
+                  <input name="valor" id="valor" type="checkbox" value="{{i.id}}" />
+        </td>
+        <td>
+            <input name="salida" id="salida" type="checkbox" value="{{i.id}}" />
+        </td>
+            <td>
+            {% if user.is_active and user.is_superuser %}
+            <a href="/editProducto/{{i.id}}/"><span class="glyphicon glyphicon-pencil"></span></a>
+            <a href="/deleteProducto/{{i.id}}/"><span class="glyphicon glyphicon-trash"></span></a>
+            {% else %}
+                <span class="glyphicon glyphicon-info-sign"></span>
+            {% endif %}
+            </td>
+        </tr>
+    {% endif %}
+  {% endfor %}
+  <tr><td></td><td>Total de registros:{{cont}}</td><!-- <td><a href="/IngresaProducto/" class="btn btn-success"><span class="glyphicon glyphicon-plus"></span>Ingresar Productos</a></td> --></tr>
+  </table>
+
+</div>
+<script type="text/javascript" src="{{STATIC_URL}}js/modales.js"></script>

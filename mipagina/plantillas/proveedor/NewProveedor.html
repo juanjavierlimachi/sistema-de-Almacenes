@@ -1,0 +1,38 @@
+
+<script type="text/javascript">
+$('#Tipo').submit(function(e){
+		e.preventDefault();
+		var dato=$(this).serialize();
+		console.log(dato);
+		$.ajax({
+			type:'POST',
+			url:'/NewProveedor/',
+			data: dato,
+			success:function(resp){
+				console.log(resp);
+				//$('#FormAjax').html(resp);
+				if (resp=='ok'){
+						$.ajax({
+						     type:'GET',
+						     url:'/VerPrveedor/',
+						     beforeSend:Espera,
+						     success:function(resp){
+						      	$("#FormAjax").html(resp);
+						      }
+						    });
+						    function Espera(){
+						       $("#FormAjax").text("Procesando");
+						    }
+					}
+					else{alert("El dato es Incorrecto.")}
+			}
+		});
+	});
+</script>
+<div class="card">
+	<p id="texto">Registro Proveedor</p>
+<form method='POST' id='Tipo'>{% csrf_token %}
+{{forms}}<br>
+<button class="btn btn-primary">Registrar</button>
+</form>
+</div>

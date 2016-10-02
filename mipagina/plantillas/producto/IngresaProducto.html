@@ -1,0 +1,23 @@
+<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/formularios.css">
+<script type="text/javascript">
+$('#Tipo').submit(function(e){
+		e.preventDefault();
+		var dato=$(this).serialize();
+		console.log(dato);
+		$.ajax({
+			type:'POST',
+			url:'/IngresaProducto/',
+			data: dato,
+			success:function(resp){
+				console.log(resp);
+				$('#ventanas').html(resp);
+			}
+		});
+	});
+</script>
+<div class="card">
+	<form method="POST" id="Tipo">{% csrf_token %}
+	{{forms}}<br>
+	<button class="btn btn-primary">Registrar</button>
+</form>
+</div>

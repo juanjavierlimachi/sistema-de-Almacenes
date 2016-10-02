@@ -1,0 +1,29 @@
+{% if productos|length == 0 %}
+<label>No exsiste Ingresos de productos</label>
+{% else %}
+<table border=1>
+	<tr><td colspan="4">Trabjador:{{traba}}</td></tr>
+	<tr><td>Detalle</td>
+		<td>Cantidad</td>
+		<td>Precio</td>
+		<td>Total</td>
+	</tr>
+	{% for i in productos %}
+		{% for j in salidas %}
+			{% if i == j.id %}
+					<tr><td>{{j.producto}}</td>
+						<td>{{j.cantidad}}</td>
+						<td>{{j.Precio_unidad}}</td>
+						<td>{{j.total}}</td>
+					</tr>
+				{% endif %}
+		{% endfor %}
+	{% endfor %}
+	<tr>
+	<td>Total:{{total_pago}}</td>
+</tr>
+</table>
+<label>Usuario: {{user}}</label><br>
+<label>Numero de Factura:{{Numcontrol}}</label><br>
+<label>Fecha y Hora:{{fecha}}</label>
+{% endif %}

@@ -1,0 +1,55 @@
+<script type="text/javascript">
+$(function(){
+    var listado = new Array();
+    $('.table tr td #valor').on('click', function(){
+        if( $(this).is(':checked') ){
+            var idProduco=$(this).val();
+            listado.push(idProduco);
+            console.log(listado)
+       // alert("Desactivaste La salida :"+idProduco);
+       } else{
+            var idProduco=$(this).val();
+            alert("Desactivaste La salida :"+idProduco);
+       }
+    });
+$("#imprimir").on("click", function(){
+
+});
+});
+</script>
+<table class="table table-hover">
+<tr align='center'><td colspan="7"><strong>Productos entregados al Trabajador: {{persona|upper}}</strong></td></tr>
+<tr class="success">
+<td>Producto</td>
+<td>Cantidad</td>
+<td>Precio</td>
+<td>Total</td>
+<td>Fecha Salida</td>
+<td>Imprmir</td>
+<td>Estado</td>
+</tr>
+{% for venta in ventas %}
+<tr>
+<td>{{venta.producto}}</td>
+<td>{{venta.cantidad}}</td>
+<td>{{venta.Precio_unidad}}</td>
+<td>{{venta.total}}</td>
+<td>{{venta.fecha_registro}}</td>
+<td><input name="valor" id="valor" type="checkbox" value="{{venta.id}}" /></td>
+<td>{% if venta.estado == 0 %}
+	<span><a href="/deleteSalidas/{{venta.id}}/"><img src="/static/img/icon_success.gif"></a></span>
+		{% else %}
+	<span><a href="/deleteSalidasRecuperar/{{venta.id}}/"><img src="/static/img/icon_error.gif"></span>
+		{% endif %}
+	</td>
+{% if user.is_authenticated and user.is_superuser %}
+<td><a href="/editSalidas/{{venta.id}}/"><span class="glyphicon glyphicon-pencil"></span></a></td>
+{% endif %}
+</tr>
+{% empty %}
+<tr><td>No hay registros para este cliente</td></tr>
+{% endfor %}
+<tr><td>Total:{{cont}}</td><td></td><td></td><td></td><td></td><td>
+    <button class="btn btn-default" target="_blank" id="imprimir">Imprimir</button></td><td></td></tr>
+</table>
+<script type="text/javascript" src="{{STATIC_URL}}js/modales.js"></script>

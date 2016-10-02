@@ -1,0 +1,29 @@
+<table class="table table-hover">
+	<tr class="success">
+		<td>NOMBRE CATEGORIA</td><td>MATERIAL</td><td>FECHA DE REGISTRO</td><td>OPCIONES</td><td>ESTADO</td>
+	</tr>
+{% for i in datos %}
+		<tr>
+			<td>{{i.Nombre_categoria}}</td>
+			<td>{{i.Material}}</td>
+			<td>{{i.fecha_registro}}</td>
+			<td>
+				{% if user.is_active %}
+				<a href="/editCate/{{i.id}}/"><span class="glyphicon glyphicon-pencil"></span></a>
+				<a href="/deleteCate/{{i.id}}/"><span class="glyphicon glyphicon-trash"></span></a>
+				{% else %}
+					<span class="glyphicon glyphicon-info-sign"></span>
+				{% endif %}
+			</td>
+			<td>
+				{% if i.estado == 0 %}
+					<span><img src="/static/img/icon_success.gif"></span>
+				{% else %}
+					<span><img src="/static/img/icon_error.gif"></span>
+				{% endif %}
+			</td>	
+		</tr>
+{% endfor %}
+<tr><td>Total registros:{{cont}}</td></tr>
+</table>
+<script type="text/javascript" src="{{STATIC_URL}}js/modales.js"></script>

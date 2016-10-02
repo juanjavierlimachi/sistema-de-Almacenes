@@ -1,0 +1,79 @@
+
+<script type="text/javascript">
+$('#Tipo').submit(function(e){
+		e.preventDefault();
+		var dato=new FormData(this);//incluyo con el formulari +la imagen 
+		//$(this).serialize();
+		var pro=$("#id_Nombre_producto").val();
+		if (!isNaN(pro)){
+			alert("En Campo No puede ser Numerico ó dato esta vacio.")
+			$('#id_Nombre_producto').focus();
+			$('#id_Nombre_producto').style.color='red';
+			return false;
+		}else{
+			console.log(dato);
+			$.ajax({
+				type:'POST',
+				url:'/NewProducto/',
+				data: dato,
+				contentType: false,
+	            processData: false,
+				success:function(resp){
+					if (resp=='ok'){
+						$.ajax({
+							type:'GET',
+							url:'/detaleProducto/',
+							success:function(data){
+								$('#FormAjax').html(data);
+							}
+						});
+					}
+					else{alert("El dato es Incorrecto.")}
+				}
+			});
+		}
+});
+function CapturaImg(){
+    $("#ventanas").dialog({
+            modal:true,
+            show:"blind",
+            width: 600,
+            hide:"explode",
+            title:"Detalle:",
+            position: "center"
+        }); 
+    $.ajax({
+        type:'GET',
+        url:'/capturaImg/',
+        success:function(resp){
+            $('#ventanas').html(resp);
+        }
+    });
+}
+function CapturaQR(){
+	$("#ventanas").dialog({
+            modal:true,
+            show:"blind",
+            width: 600,
+            hide:"explode",
+            title:"Detalle:",
+            position: "center"
+        });
+	$.ajax({
+        type:'GET',
+        url:'/captura_qr/',
+        success:function(resp){
+            $('#ventanas').html(resp);
+        }
+    });
+}
+</script>
+<div class="card">
+	<p id="texto">Registro Producto</p>
+	<form method="POST" id="Tipo" enctype="multipart/form-data">{% csrf_token %}
+		{{forms}}<br>
+		<!-- <a href="#" onclick="CapturaImg()" class="btn btn-primary" ><span class="glyphicon glyphicon-camera"></span></a> -->
+		<a href="#" onclick="CapturaQR()" title="Registrar desde un Código QR" class="btn btn-primary"><span class="glyphicon glyphicon-qrcode"></span></a>
+		 					<button class="btn btn-primary">Registrar</button>
+	</form>
+</div>

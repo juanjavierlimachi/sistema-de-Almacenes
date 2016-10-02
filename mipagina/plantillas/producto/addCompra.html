@@ -1,0 +1,83 @@
+<style type="text/css">
+#fb{width: 67%;margin-left: 0px; float: left; margin-top: 5px;}
+#new{float: right; margin-right: 0px; margin-top: 5px;}
+.datosP li{margin-top: 40px;}
+</style>
+<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/formularios.css">
+<script type="text/javascript">
+$(document).ready(inicio);
+function inicio()
+{
+	$(".card").hide();
+    var tbuscar=$("#id_text").attr('autocomplete','off');
+    tbuscar.keypress(buscar);
+}
+function buscar(){
+	//alert("biscar");
+    $.ajax({
+        type:'GET',
+        url:'/buscarPro/',
+        data:$("#fb").serialize(),
+        success:resultado,
+        error:errores
+    })
+}
+function resultado(data){
+    $(".datosP").fadeIn("slow");
+    $(".datosP").html(data);
+}
+function errores(){
+    alert("Error");
+
+}
+$("#NewP").on('click', function(e){
+	e.preventDefault();
+	$("#fb").hide(500);
+	$("#NewP").hide(500);
+	$(".card").show(800);
+	var urla=$(this).attr("href");
+	$.ajax({
+		type:'GET',
+		url:urla,
+		success:function(resp){
+			$("#infor").html(resp);
+		}
+	});
+});
+
+$('#Tipo').submit(function(e){
+		e.preventDefault();
+		var dato=$(this).serialize();
+		console.log(dato);
+		$.ajax({
+			type:'POST',
+			url:'/NewProveedor/',
+			data: dato,
+			success:function(resp){
+				console.log(resp);
+				$('#infor').html(resp);
+				$("#fb").show(800);
+				$("#NewP").show(800);
+				$(".card").hide(500);
+			}
+		});
+	});
+</script>
+<form action="#" method="post" id="fb" class="sidebar-form">
+   <div class="input-group">
+       <input type="text" name="q" id="id_text" class="form-control" placeholder="Buscar Proveedor.">
+              <span class="input-group-btn">
+                <button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i>
+           </button>
+        </span>
+     </div>
+</form>
+<div class="card">
+<form method='POST' id='Tipo'>{% csrf_token %}
+{{forms}}<br>
+<button class="btn btn-primary">Registrar</button>
+</form>
+</div>
+<p id="infor"></p>
+<a href="/newProveedorr/" id="NewP" class="btn btn-default" id="new"><span class="glyphicon glyphicon-user">Nuevo Proveedor</span></a>
+<div class="datosP"></div>

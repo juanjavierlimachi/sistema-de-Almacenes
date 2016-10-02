@@ -1,0 +1,108 @@
+<script type="text/javascript">
+$('#categorias table tr td #salida').on('click', function(){
+        if( $(this).is(':checked') ){
+            var idProduco=$(this).val();
+        $.ajax({
+            type:'GET',
+            url:'/salidas/'+idProduco,
+            success:function(resp){
+                $("#ventanas").dialog({
+                    modal:true,
+                    show:"blind",
+                    width: 600,
+                    hide:"explode",
+                    title:"Codigo Articulo:"+idProduco,
+                    position: "center"
+                }); 
+                $('#ventanas').html(resp);
+            }
+        });
+       } else{
+            var idProduco=$(this).val();
+            alert("Actualizar la Salida :"+idProduco);
+       }
+    });
+    $('#categorias table tr td #valor').on( 'click', function() {
+    if( $(this).is(':checked') ){
+        var idProduco=$(this).val();
+        $.ajax({
+            type:'GET',
+            url:'/IngresosP/'+idProduco,
+            success:function(resp){
+                $("#ventanas").dialog({
+                    modal:true,
+                    show:"blind",
+                    width: 600,
+                    hide:"explode",
+                    title:"Codigo Articulo:"+idProduco,
+                    position: "center"
+                }); 
+                $('#ventanas').html(resp);
+            }
+        });
+    } else {
+         // Hacer algo si el checkbox ha sido deseleccionado
+        alert("El checkbox con valor " + $(this).val() + " ha sido deseleccionado");
+    }
+
+});
+</script>
+<div id="categorias">
+    <tr><td>Producto</td></tr>
+<table class="table table-hover">
+<tr class="success">
+    <td>Nombre Articulo</td>
+    <td>Marca</td>
+    <td>Procio Unitario</td>
+    <td>Usuario</td>
+    <td>Categoria</td>
+    <td>Cod</td>
+    <td>Stock</td>
+    <td>Kardex</td>
+    <td>Ingreso</td>
+    <td>Salida</td>
+    <td></td>
+</tr>
+		<tr>
+			<td>{{producto.Nombre_producto}}</td>
+			<td>{{producto.Marca}}</td>
+			<td>{{producto.Precio_producto}}</td>
+			<td>{{producto.Usuario}}</td>
+			<td>{{producto.Categoria}}</td>
+			<td>{{producto.id}}</td>
+			<td>{% if producto.Stock < 10 %}
+                    <p style="background:LightCoral;margin-top: 0px;margin-bottom: 0px;">{{producto.Stock}}</p>
+                {% endif %}
+                {% if producto.Stock >= 10 and producto.Stock < 25 %}
+                    <p style="background:Khaki;margin-top: 0px;margin-bottom: 0px;">{{producto.Stock}}</p>    
+                {% endif %}
+                {% if producto.Stock >= 25 %}
+                    <p style="background:SpringGreen;margin-top: 0px;margin-bottom: 0px;">{{producto.Stock}}</p>    
+                {% endif %}
+            </td>
+            <td><a href="/kardex/{{producto.id}}/" title="Ver Kardex del producto"><span class="glyphicon glyphicon-list-alt"></span></a></td>
+			<td><!-- <a href="/addCompra/{{i.id}}/"><span class="glyphicon glyphicon-shopping-cart"></span></a> -->
+				<input name="valor" id="valor" type="checkbox" value="{{producto.id}}" />
+            </td>
+            <td>
+                <input name="salida" id="salida" type="checkbox" value="{{producto.id}}" />
+            </td>
+			<td>
+			{% if user.is_active and user.is_superuser %}
+			<a href="/editProducto/{{producto.id}}/"><span class="glyphicon glyphicon-pencil"></span></a>
+            <a href="/deleteProducto/{{producto.id}}/"><span class="glyphicon glyphicon-trash"></span></a>
+			{% else %}
+				<span class="glyphicon glyphicon-info-sign"></span>
+			{% endif %}
+			</td>
+			<td>{% if producto.estado == 0 %}
+			<span><a href="/deleteProducto/{{producto.id}}/"><img src="/static/img/icon_success.gif"></a></span>
+				{% else %}
+			<span><a href="/deleteProductoRecuperar/{{producto.id}}/"><img src="/static/img/icon_error.gif"></span>
+				{% endif %}
+			</td>
+		</tr>
+<tr><td>Total de registros: 1</td><!-- <td><a href="/IngresaProducto/" class="btn btn-success"><span class="glyphicon glyphicon-plus"></span>Ingresar Productos</a></td> --></tr>
+</table>
+</div>
+<script type="text/javascript" src="{{STATIC_URL}}js/modales.js"></script>

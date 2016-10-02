@@ -1,0 +1,31 @@
+<table class="table table-hover">
+	<tr><td colspan="7" align="center">LISTA DE PROVEEDORES</td></tr>
+<tr class="success">
+	<td>Nombre ó Razon Social</td>
+	<td>Nit</td>
+	<td>Telefono</td>
+	<td>Direccion</td>
+	<td>Fecha Registro</td>
+	<td>Opciones</td>
+</tr>
+{% for i in datos %}
+	{% if i.estado == 0 %}
+	<tr>
+		<td>{{i.Nombre_Razon_Social}}</td>
+		<td>{{i.Nit}}</td>
+		<td>{{i.Telefono}}</td>
+		<td>{{i.Direccion}}</td>
+		<td>{{i.fecha_registro}}</td>
+		<td>
+			{% if user.is_active %}
+			<a href="/editProveedor/{{i.id}}/"><span class="glyphicon glyphicon-pencil"></span></a>
+			<a href="/deleteProveedor/{{i.id}}/"><span class="glyphicon glyphicon-trash"></span></a>
+			{% else %}
+				<span class="glyphicon glyphicon-info-sign"></span>
+			{% endif %}
+			</td>
+	</tr>
+	{% endif %}
+{% endfor %}
+</table>
+<script type="text/javascript" src="{{STATIC_URL}}js/modales.js"></script>

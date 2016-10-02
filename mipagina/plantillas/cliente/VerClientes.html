@@ -1,0 +1,28 @@
+<table class="table table-hover">
+	<tr><td colspan="7" align="center">LISTA DE TRABAJADORES</td></tr>
+<tr class="success"><td>NOMBRE TRABAJADOR</td><td>APELLIDO(S)</td><td>CI/NIT</td><td>TELEFONO</td><td>DIRECCIÓN</td><td>FECHA REGISTRO</td>
+	<td>Opciones</td>
+</tr>
+{% for i in datos %}
+	{% if i.estado == 0 %}
+		<tr>
+			<td>{{i.Nombre_trabajador}}</td>
+			<td>{{i.Apellidos}}</td>
+			<td>{{i.Ci_Nit}}</td>
+			<td>{{i.Telefono}}</td>
+			<td>{{i.Direccion}}</td>
+			<td>{{i.fecha_registro}}</td>
+			<td>
+				{% if user.is_active %}
+				<a href="/editTrabajador/{{i.id}}/"><span class="glyphicon glyphicon-pencil"></span></a>
+				<a href="/deleteTrabajador/{{i.id}}/"><span class="glyphicon glyphicon-trash"></span></a>
+				{% else %}
+					<span class="glyphicon glyphicon-info-sign"></span>
+				{% endif %}
+			</td>
+		</tr>
+	{% endif %}
+{% endfor %}
+<tr> <td>Total Registros:{{cliente}}</td> </tr>
+</table>
+<script type="text/javascript" src="{{STATIC_URL}}js/modales.js"></script>

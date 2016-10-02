@@ -1,0 +1,32 @@
+<script type="text/javascript">
+$(".datos li a").click(function(e){
+  e.preventDefault();
+	$.ajax({
+	type:"GET",
+	url:$(this).attr("href"),
+	success:function(resp){
+		$("#ventanas").html(resp);
+		Update();
+	}
+});
+});
+function Update(){
+	$.ajax({
+      type:'GET',
+      url:'/VerPrveedor/',
+      beforeSend:Espera,
+      success:function(resp){
+        $("#FormAjax").html(resp);
+      }
+    });
+    function Espera(){
+       $("#FormAjax").text("Procesando");
+    }
+}
+</script>
+<ul class="datos">
+<li>Esta seguro de Eliminar el Proveedor: {{dato.Nombre_Razon_Social}}?
+<a href="/delProveedor/{{dato.id}}/" class="btn btn-danger">Si</a>
+</li>
+
+</ul>

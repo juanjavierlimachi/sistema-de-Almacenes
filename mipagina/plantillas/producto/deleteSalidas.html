@@ -1,0 +1,32 @@
+<script type="text/javascript">
+$(".datos li a").click(function(e){
+  e.preventDefault();
+	$.ajax({
+	type:"GET",
+	url:$(this).attr("href"),
+	success:function(resp){
+		$("#ventanas").html(resp);
+		Update();
+	}
+});
+});
+function Update(){
+	$.ajax({
+      type:'GET',
+      url:'/outProduct/',
+      beforeSend:Espera,
+      success:function(resp){
+        $("#FormAjax").html(resp);
+      }
+    });
+    function Espera(){
+       $("#FormAjax").text("Procesando");
+    }
+}
+</script>
+<ul class="datos">
+<li>Esta seguro de Eliminar a: {{dato.producto}}.?
+<a href="/deleteSalidasConfir/{{dato.id}}/" class="btn btn-danger">Si</a>
+</li>
+
+</ul>

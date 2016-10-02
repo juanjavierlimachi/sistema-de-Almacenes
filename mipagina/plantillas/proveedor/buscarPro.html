@@ -1,0 +1,17 @@
+<style type="text/css">
+.glyphicon .glyphicon-plus{height: 5px;}
+</style>
+<script type="text/javascript">
+$(".aa a").on('click',function(e){
+	e.preventDefault();
+	var urla=$(this).attr("href");
+	$("#ventanas").dialog('close');
+	alert(urla);
+});
+</script>
+
+	{% for i in resultados %}
+<li class="aa">{{i.Nombre_Razon_Social}},{{i.Nit}}  {{i.Telefono}}
+	<a href="/addProveedor/{{i.id}}/" class="btn btn-success" id="add">
+<span class="glyphicon glyphicon-ok-sign">Agregar</span></a> </li>
+	{% endfor %}

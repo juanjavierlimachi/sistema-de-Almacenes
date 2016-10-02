@@ -1,0 +1,55 @@
+<script type="text/javascript">
+$('#Tipoo').submit(function(e){
+		e.preventDefault();
+		var datos=$(this).serialize();
+		
+		console.log(datos);
+		$.ajax({
+			type:'POST',
+			url:'/IngresoProductoCliente/',
+			data: datos,
+			success:function(resp){
+				console.log(resp);
+				//alert("Guardado...");
+				//$("#movimiento").prepend(resp);
+				ingresos();
+				$("#ventanas").dialog("close");
+				VerProduct();
+				cantIngresos();
+
+			}
+		});
+	});
+function ingresos(){
+	$.ajax({
+		type:'GET',
+		url:'/get_retorna_ingresos/',
+		success:function(resp){
+			$(".tasks-menu .dropdown-menu .menu").prepend(resp);
+		}
+	});
+}
+function cantIngresos(){
+	$.ajax({
+		type:'GET',
+		url:'/cantidadIngresos/',
+		success:function(resp){
+			$(".tasks-menu .label-danger").html(resp);
+		}
+	});
+}
+$(document).ready(function(){
+	$(".card li").hide(1000);
+});
+</script>
+	<h5>Nombre o razón social:{{trab.Nombre_Razon_Social}},Nit:{{trab.Nit}}. Telf:{{trab.Telefono}}</h5>
+<div class="card">
+<form method="POST" id="Tipoo" >	{% csrf_token %}
+	<input type="hidden" value="{{producto.id}}" id="prod" name="prod" required><br>
+	<input type="hidden" value="{{trab.id}}" id="trab" name="trab" required><br>
+	<label>Precio:</label><input type="number" value="{{producto.Precio_producto}}" id="prec" name="prec" min="1" step="any" placeholder="Precio actual:{{producto.Precio_producto}}" required><br>
+	<label>Cantidad:</label><input type="number" value="" id="cant" name="cant" min="1" placeholder="Stock actual es:{{producto.Stock}}" required><br>
+	<button class="btn btn-primary">Registrar</button>
+</form>
+</div>
+

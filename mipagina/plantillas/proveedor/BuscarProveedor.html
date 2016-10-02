@@ -1,0 +1,34 @@
+<style type="text/css">
+.glyphicon .glyphicon-plus{height: 5px;}
+</style>
+<script type="text/javascript">
+$(".aa a").on('click',function(e){
+	e.preventDefault();
+	var urla=$(this).attr("href");
+	//Aqui mandos El id del producto y del cliente 
+	datos={
+		'trabajador':urla,
+		'producto':"{{datoProducto.id}}"
+	}
+	//alert(urla);
+	$.ajax({
+		type:"GET",
+		url:"/IngresosProductos/",
+		data:datos,
+		success:function(resp){
+			$("#ff").html(resp);
+		}
+	});
+});
+</script>
+<h5>Producto:{{datoProducto.Nombre_producto}}                                       Stock actual:{{datoProducto.Stock}}</h5>
+<div id="ff"></div>
+{% for i in resultados %}
+<li class="aa">
+	{{i.Nombre_Razon_Social}},{{i.Nit}}   Telf:{{i.Telefono}} Direccion:{{i.Direccion}}
+	<a href="{{i.id}}" class="btn btn-success" id="add">
+<span class="glyphicon glyphicon-ok-sign">Agregar</span></a> </li>
+{% empty %}
+	<p>No hay Coinsidencias</p>
+{% endfor %}
+

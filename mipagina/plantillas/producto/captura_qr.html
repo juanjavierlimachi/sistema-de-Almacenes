@@ -1,0 +1,38 @@
+
+<!DOCTYPE html>
+    
+    <script src="{{STATIC_URL}}js/html5-qrcode.min.js"></script>
+    <script type="text/javascript">
+    $(document).ready(function(){
+		$('#reader').html5_qrcode(function(data){
+				$('#read').prepend(data+'<br>');
+			},
+			function(error){
+				$('#read_error').html(error);
+			}, function(videoError){
+				$('#vid_error').html(videoError);
+			}
+			);
+	});
+    </script>
+    <!-- MAIN CONTENT -->
+<section id="main_content" class="inner center">
+  <div id="main_content_wrap" class="outer">
+  <h3 class="center">Muestre la Imagen del Producto en la camara</h3>
+
+  <div  class="center" id="reader" style="width:300px;height:250px;"></div>
+
+  <h6 class="center">Resultado</h6>
+  <span id="read" class="center"></span>
+  <br>
+
+  <h6 class="center">Mensaje al leer el QR</h6>
+  <span class="center">Posesione correctamente la imagen</span>
+  <span id="read_error" class="center"></span>
+
+  <br>
+  <h6 class="center">Video Error</h6>
+  <span id="vid_error" class="center"></span>
+  </div>
+</section>
+

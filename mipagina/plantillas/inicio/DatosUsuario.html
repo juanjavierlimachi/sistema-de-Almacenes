@@ -1,0 +1,22 @@
+<table class="table table-hover">
+		<tr class="success">
+			<td>Usuario</td><td>Nombre</td><td>Apellido</td><td>Nro. CI.</td><td>Fecha registro</td><td>Ultimo Ingreso</td><td>Estado</td>
+		</tr>
+		{% for j in users %}
+	{% for i in perfil %}
+			{% if j.id == i.usuario_id %}
+<tr><td>{{j.username}}</td><td>{{j.first_name}}</td><td>{{j.last_name}}</td><td>{{i.ci}}</td><td>{{j.date_joined}}</td><td>{{j.last_login|timesince}}</td><td>
+{% if j.is_active %}
+				<span><a href="/UsuarioVer/{{j.id}}/"><img src="/static/img/icon_success.gif"></a></span>
+				{% else %}
+				<span><a href="/UsuarioVer/{{j.id}}/"><img src="/static/img/icon_error.gif"></a></span>
+				{% endif %}
+				</td>
+</tr>
+			{% endif %}
+		{% endfor %}
+	{% endfor %}
+	<tr><td>Usuarios:{{t_user}}</td></tr>
+	</table>
+<script type="text/javascript" src="{{STATIC_URL}}js/modales.js"></script>
+

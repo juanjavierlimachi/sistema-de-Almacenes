@@ -1,0 +1,320 @@
+<script type="text/javascript">
+$("#categorias table tr td #salida").disabled;
+$(document).ready(function(){
+    $("#formu").hide();
+    $('#categorias table tr td #salida').on('click', function(){
+        if( $(this).is(':checked') ){
+            var idProduco=$(this).val();
+        $.ajax({
+            type:'GET',
+            url:'/salidas/'+idProduco,
+            success:function(resp){
+                $("#ventanas").dialog({
+                    modal:true,
+                    show:"blind",
+                    width: 600,
+                    hide:"explode",
+                    title:"Codigo Articulo:"+idProduco,
+                    position: "center"
+                }); 
+                $('#ventanas').html(resp);
+            }
+        });
+       } else{
+            var idProduco=$(this).val();
+            alert(" Salida :"+idProduco);
+       }
+    });
+    $('#categorias table tr td #valor').on( 'click', function() {
+    if( $(this).is(':checked') ){
+        var idProduco=$(this).val();
+        $.ajax({
+            type:'GET',
+            url:'/IngresosP/'+idProduco,
+            success:function(resp){
+                $("#ventanas").dialog({
+                    modal:true,
+                    show:"blind",
+                    width: 600,
+                    hide:"explode",
+                    title:"Codigo Articulo:"+idProduco,
+                    position: "center"
+                }); 
+                $('#ventanas').html(resp);
+            }
+        });
+    } else {
+         // Hacer algo si el checkbox ha sido deseleccionado
+        alert("El checkbox con valor " + $(this).val() + " ha sido deseleccionado");
+    }
+
+});
+    
+$('#cate').on('change',inicio);
+    function inicio(){
+        var id = $(this).val();
+        console.log(id); //aki vemos k el id se esta inprimiendo
+        $.ajax({
+            type: 'GET',
+            url:"/por_categorias/"+id+"",
+            beforeSend:Espera,
+            success: function(data){
+                console.log(data);
+                $('#categorias').html(data);
+            }
+        });
+        function Espera(){
+        $("#categorias").text("Prosesando...");
+      }
+    }
+$('#stock').on('change',stock);
+    function stock(){
+        var id = $(this).val();
+        console.log(id); //aki vemos k el id se esta inprimiendo
+        $.ajax({
+            type: 'GET',
+            url:"/stock_de_productos/"+id+"",
+            beforeSend:Espera,
+            success: function(data){
+                console.log(data);
+                $('#categorias').html(data);
+            }
+        });
+        function Espera(){
+        $("#categorias").text("Prosesando...");
+      }
+    }
+
+var tbuscar=$("#Pro").attr('autocomplete','off');
+      tbuscar.keypress(buscarProducto);
+      function buscarProducto(){
+          $.ajax({
+              type:'GET',
+              url:'/buscarProducto_view/',
+              data:$("#Busqueda").serialize(),
+              success:resultado,
+              error:errores
+          });
+        console.log($("#Busqueda").serialize());
+      }
+        function resultado(data){
+            $("#DatosAjax").fadeIn("slow");
+            console.log(data);
+            $("#DatosAjax").html(data);
+        }
+        function errores(){
+            alert("Error");
+        }
+
+      $("#Busqueda").on("submit",function(e){
+        e.preventDefault();
+        var datos=$(this).serialize();
+        //alert(datos);
+          $.ajax({
+              type:"POST",
+              url:"/buscarProducto_view/",
+              data:datos,
+              success:function(resp){
+                $("#categorias").fadeIn("slow");
+                //alert(resp);
+                //$("#categorias").html(resp);
+                $("#DatosAjax").html(resp);
+              }
+          });
+      });
+
+  //$("table tr td #kar").attr("id","cambiado");
+
+});
+function update_pro(){
+    $.ajax({
+      type:'GET',
+      url:'/VerProductos/',
+      beforeSend:Espera,
+      success:function(resp){
+          $("#FormAjax").html(resp);
+      }
+  });
+      function Espera(){
+        $("#FormAjax").text("Prosesando...");
+      }
+}
+function InpremeDatos(){
+    $.ajax({
+      type:'GET',
+      url:'/get_retorna_salidas/',
+      beforeSend:Espera,
+      success:function(resp){
+          $("#FormAjax").html(resp);
+      }
+  });
+      function Espera(){
+        $("#FormAjax").text("Prosesando...");
+      }
+}
+function Files(){
+    $("#ventanas").dialog({
+            modal:true,
+            show:"blind",
+            width: 600,
+            hide:"explode",
+            title:"Detalle:",
+            position: "center"
+        }); 
+    $.ajax({
+        type:'GET',
+        url:'/uploadFiles/',
+        success:function(resp){
+            $('#ventanas').html(resp);
+        }
+    });
+}
+function VerImg(){
+  //alert("ya te mostrare la imagen");
+}
+function update_session(){
+  $("#ventanas").text("Esta seguro de linpiar la Bandeja de salidas?");
+  $("#ventanas").dialog({
+     modal:true,
+            show:"blind",
+            width: 600,
+            hide:"explode",
+            title:"Detalle:",
+            position: "center",
+            resizable: false,
+            buttons: [
+              {
+                text: "Si",
+                click: function() {
+                  $.ajax({
+                    type:'GET',
+                    url:'/update_session/',
+                    success:function(resp){
+                      $("#ventanas").html(resp);
+                    }
+                  });
+                }
+              }
+            ]
+      });
+}
+function borrado(){
+  $.ajax({
+    type:'GET',
+    url:'/update_session/',
+    success:function(resp){
+      $("#ventanas").html(resp);
+    }
+  });
+}
+</script>
+<div id="controles">
+<select id="cate">
+                <option>Ver por Categorias</option>
+                {% for i in categorias %}
+                    <option value='{{i.id}}'>{{i.Nombre_categoria}}</option>
+                {% endfor %}
+</select>
+<select id="stock">
+    <option>Productos en Stock</option>
+    <option value='0'>Productos = 0 </option>
+    <option value='1'>Productos 0 > y < 10 </option>
+    <option value='2'>Productos >= 10 y < 25 </option>
+    <option value='3'>Productos >= 25 y < 60 </option>
+    <option value='4'>Productos >= 60 </option>
+</select>
+<div class="btn-group">
+  <button type="button" target="_blank" class="btn btn-default"><span class="glyphicon glyphicon-remove"></span></button>
+
+   <div class="btn-group">
+    <button type="button" class="btn btn-default dropdown-toggle"
+            data-toggle="dropdown"> <span class="glyphicon glyphicon-print"></span>          
+      Imprimir     
+      <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu">
+      <li><a href="/get_retorna_ingresos/" target="_blank"><span class="glyphicon glyphicon-print"></span> Imgresos</a></li>
+      <li><a href="/get_retorna_salidas/" target="_blank"><span class="glyphicon glyphicon-print"></span> Salidas</a></li>
+    </ul>
+  </div>
+<button type="button" onclick="update_pro();" class="btn btn-default"><span class="glyphicon glyphicon-refresh"></span></button>
+  <div class="btn-group">
+    <button type="button" class="btn btn-default dropdown-toggle"
+            data-toggle="dropdown"> <span class="glyphicon glyphicon-download-alt"></span>          
+      Descargar     
+      <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu">
+      <li><a href="/ImprecionPdf/" target="_blank"><span class="glyphicon glyphicon-file"></span> Imprimir PDF</a></li>
+      <li><a href="/ImprecionExcel/" target="_blank"><span class="glyphicon glyphicon-list-alt"></span> Exportar Excel</a></li>
+    </ul>
+  </div>
+  <button type="button" onclick="update_session();" class="btn btn-default"><span class="glyphicon glyphicon-plus"></span> Nuevo Movimiento</button>
+</div>
+ <form method="POST" id="Busqueda">{% csrf_token %}
+    <input type="text" name="p" id="Pro" placeholder="Nombre Producto, Cod, Marca" class="form-control" title="Busque un producto" required/>
+    <span class="input-group-btn">
+    <button class="btn btn-default"><span class="glyphicon glyphicon-search"></span></button></span>
+</form>
+</div>
+<div id="categorias">
+  <table class="table table-hover">
+  <tr><td colspan="11" align="center">LISTA DE ARTÍCULOS E INSUMOS</td></tr>
+  <tr class="success">
+    <td>Cod</td>
+    <td>Nombre Articulo</td>
+    <td>Marca</td>
+    <td>Procio Unitario</td>
+    
+    <td>Categoria</td>
+
+    <td>Kardex</td>
+    <td>Ingreso</td>
+    <td>Salida</td>
+    <td></td>
+  </tr>
+  {% for i in datos %}
+  	{% if i.estado == 0 %}
+  		<tr>
+        <td><a href="/ok/" id="{{i.id}}">{{i.id}}</a></td>
+  			<td>{{i.Nombre_producto|upper}}</td>
+  			<td>{{i.Marca}}</td>
+  			<td>{{i.Precio_producto}}</td>
+  			<td>{{i.Categoria}}</td>
+  			<td>{% if i.Stock < 10 %}
+                      <p style="background:LightCoral;margin-top: 0px;margin-bottom: 0px;">{{i.Stock}}</p>
+                  {% endif %}
+                  {% if i.Stock >= 10 and i.Stock < 25 %}
+                      <p style="background:Khaki;margin-top: 0px;margin-bottom: 0px;">{{i.Stock}}</p>    
+                  {% endif %}
+                  {% if i.Stock >= 25 %}
+                      <p style="background:SpringGreen;margin-top: 0px;margin-bottom: 0px;">{{i.Stock}}</p>    
+                  {% endif %}
+              </td>
+  			<td>
+  				  <input name="valor" id="valor" type="checkbox" value="{{i.id}}" />
+        </td>
+        <td>
+            <input name="salida" id="salida" type="checkbox" value="{{i.id}}" />
+        </td>
+  			<td>
+  			{% if user.is_active and user.is_superuser %}
+  			<a href="/editProducto/{{i.id}}/"><span class="glyphicon glyphicon-pencil"></span></a>
+  			<a href="/deleteProducto/{{i.id}}/"><span class="glyphicon glyphicon-trash"></span></a>
+  			{% else %}
+  				<span class="glyphicon glyphicon-info-sign"></span>
+  			{% endif %}
+  			</td>
+  		</tr>
+  	{% endif %}
+  {% endfor %}
+  <tr><td></td><td>Total de registros:{{cont}}</td><!-- <td><a href="/IngresaProducto/" class="btn btn-success"><span class="glyphicon glyphicon-plus"></span>Ingresar Productos</a></td> --></tr>
+  </table>
+</div>
+<style type="text/css">
+#controles{height: 30px}
+#controles form{width: 25%;float: right;margin-right: 0px;}
+#controles form input{width: 70%;float: left;}
+</style>
+
+<script type="text/javascript" src="{{STATIC_URL}}js/modales.js"></script>

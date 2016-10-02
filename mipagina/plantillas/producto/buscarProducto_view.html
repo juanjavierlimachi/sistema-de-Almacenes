@@ -1,0 +1,20 @@
+<script type="text/javascript">
+	$(".aa a").on('click',Escogido);
+	function Escogido(e){
+		e.preventDefault();
+		var ulrs=$(this).attr("href");
+		//alert(ulrs);
+		$.ajax({
+			type:'GET',
+			url:ulrs,
+			success:function(resp){
+				$("#categorias").html(resp);
+				$("#DatosAjax").hide(1000);
+			}
+		});
+	}
+</script>
+{% for i in resultados %}
+<li class="aa"><a href="/ShearProduc/{{i.id}}/">Cod: {{i.id}}.- {{i.Nombre_producto}},{{i.Marca}}  {{i.Precio_producto}} {{i.Stock}}</a></li>
+
+{% endfor %}
